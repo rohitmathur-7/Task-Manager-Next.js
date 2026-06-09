@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import useProjects from "../../hooks/useProjects";
+import { useProjects } from "@/context/ProjectsContext";
 
 const Projects = () => {
 	const { projects, setProjects } = useProjects();
@@ -15,7 +15,7 @@ const Projects = () => {
 		setProjects((currentProjects) => [
 			...currentProjects,
 			{
-				id: currentProjects.length + 1,
+				id: (currentProjects.length + 1).toString(),
 				name: newProjectName,
 				tasks: { title: "", status: "" },
 			},
