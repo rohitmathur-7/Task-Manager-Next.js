@@ -62,7 +62,9 @@ const Project = () => {
 			<ul>
 				{projects
 					.filter((project) => String(project.id) === String(projectid))
-					.flatMap((project) => project.tasks)
+					.flatMap((project) =>
+						Array.isArray(project.tasks) ? project.tasks : [],
+					)
 					.map((task, index) => (
 						<li key={index}>
 							{task.title} - {task.status}

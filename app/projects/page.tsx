@@ -17,7 +17,6 @@ const Projects = () => {
 			{
 				id: (currentProjects.length + 1).toString(),
 				name: newProjectName,
-				tasks: [],
 			},
 		]);
 
