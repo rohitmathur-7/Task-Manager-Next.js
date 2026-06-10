@@ -1,21 +1,72 @@
-import Link from "next/link";
-import tasks from "../../data/tasks";
+"use client";
 
-const Project = async ({
-	params,
-}: {
-	params: Promise<{ projectid: string }>;
-}) => {
-	const { projectid } = await params;
+import Link from "next/link";
+import { useProjects } from "@/context/ProjectsContext";
+import { useState } from "react";
+import { useParams } from "next/navigation";
+
+const Project = () => {
+	const params = useParams<{ projectid: string | string[] }>();
+	const projectid = Array.isArray(params.projectid)
+		? params.projectid[0]
+		: params.projectid;
+
+	const { projects, setProjects } = useProjects();
+
+	const [taskName, setTaskName] = useState("");
+	const [taskStatus, setTaskStatus] = useState("");
+
+	const addTask = () => {
+		if (!projectid || taskName.trim() === "" || taskStatus === "") return;
+
+		setProjects((currentProjects) =>
+			currentProjects.map((project) => {
+				if (String(project.id) !== String(projectid)) {
+					return project;
+				}
+
+				const currentTasks = Array.isArray(project.tasks) ? project.tasks : [];
+
+				return {
+					...project,
+					tasks: [...currentTasks, { title: taskName, status: taskStatus }],
+				};
+			}),
+		);
+
+		setTaskName("");
+		setTaskStatus("");
+	};
 
 	return (
 		<div>
 			<Link href="/">Home</Link>
+			<br />
+			<button>Add Task</button>
+			<input
+				type="text"
+				placeholder="Task Name"
+				value={taskName}
+				onChange={(e) => setTaskName(e.target.value)}
+			/>
+			<select
+				value={taskStatus}
+				onChange={(e) => setTaskStatus(e.target.value)}
+			>
+				<option value="">Select Status</option>
+				<option value="not-started">Not Started</option>
+				<option value="in-progress">In Progress</option>
+				<option value="done">Done</option>
+			</select>
+			<button onClick={addTask}>Add</button>
 			<ul>
-				{tasks
-					.filter((task) => task.projectId === projectid)
-					.map((task) => (
-						<li key={task.id}>{task.title}</li>
+				{projects
+					.filter((project) => String(project.id) === String(projectid))
+					.flatMap((project) => project.tasks)
+					.map((task, index) => (
+						<li key={index}>
+							{task.title} - {task.status}
+						</li>
 					))}
 			</ul>
 		</div>

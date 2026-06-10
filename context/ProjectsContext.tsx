@@ -16,7 +16,7 @@ type Task = {
 type Project = {
 	id: string;
 	name: string;
-	tasks: Task;
+	tasks: Task[];
 };
 
 type ProjectsContextType = {
