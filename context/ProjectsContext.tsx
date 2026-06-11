@@ -21,7 +21,9 @@ type Project = {
 
 type ProjectsContextType = {
 	projects: Project[];
-	setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
+	getProjectById: (projectId: string) => Project | undefined;
+	addProject: (projectName: string) => void;
+	addTask: (projectId: string, task: Omit<Task, "id">) => void;
 };
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(
@@ -50,11 +52,48 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 		localStorage.setItem("projects", JSON.stringify(projects));
 	}, [projects, isHydrated]);
 
+	const getProjectById = (projectId: string) => {
+		return projects.find((project) => project.id === projectId);
+	};
+
+	const addProject = (projectName: string) => {
+		setProjects((currentProjects) => [
+			...currentProjects,
+			{
+				id: (currentProjects.length + 1).toString(),
+				name: projectName,
+			},
+		]);
+	};
+
+	const addTask = (projectId: string, task: Omit<Task, "id">) => {
+		console.log("🚀 ~ addTask ~ projectId:", projectId);
+		console.log("🚀 ~ addTask ~ task:", task);
+		setProjects((currentProjects) => {
+			return currentProjects.map((project) => {
+				if (project.id === projectId) {
+					const currentTasks = Array.isArray(project.tasks)
+						? project.tasks
+						: [];
+
+					return {
+						...project,
+						tasks: [...currentTasks, { ...task }],
+					};
+				}
+
+				return project;
+			});
+		});
+	};
+
 	return (
 		<ProjectsContext.Provider
 			value={{
 				projects,
-				setProjects,
+				getProjectById,
+				addProject,
+				addTask,
 			}}
 		>
 			{children}

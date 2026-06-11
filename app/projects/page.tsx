@@ -5,24 +5,9 @@ import { useState } from "react";
 import { useProjects } from "@/context/ProjectsContext";
 
 const Projects = () => {
-	const { projects, setProjects } = useProjects();
+	const { projects, addProject } = useProjects();
 	const [newProjectName, setNewProjectName] = useState("");
 	const [showAddProjectName, setShowAddProjectName] = useState(false);
-
-	const addProject = () => {
-		if (newProjectName.trim() === "") return;
-
-		setProjects((currentProjects) => [
-			...currentProjects,
-			{
-				id: (currentProjects.length + 1).toString(),
-				name: newProjectName,
-			},
-		]);
-
-		setNewProjectName("");
-		setShowAddProjectName(false);
-	};
 
 	return (
 		<div>
@@ -49,7 +34,7 @@ const Projects = () => {
 						value={newProjectName}
 						onChange={(e) => setNewProjectName(e.target.value)}
 					/>
-					<button onClick={addProject}>Add</button>
+					<button onClick={() => addProject(newProjectName)}>Add</button>
 				</>
 			)}
 		</div>
