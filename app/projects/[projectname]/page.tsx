@@ -6,22 +6,28 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 
 const Project = () => {
-	const params = useParams<{ projectid: string | string[] }>();
-	const projectid = Array.isArray(params.projectid)
-		? params.projectid[0]
-		: params.projectid;
+	const params = useParams<{ projectname: string | string[] }>();
+	console.log("🚀 ~ Project ~ params:", params);
+	const projectName = Array.isArray(params.projectname)
+		? params.projectname[0]
+		: params.projectname;
+	console.log("🚀 ~ Project ~ projectName:", projectName);
 
 	const { projects, setProjects } = useProjects();
+	console.log("🚀 ~ Project ~ projects:", projects);
 
 	const [taskName, setTaskName] = useState("");
 	const [taskStatus, setTaskStatus] = useState("");
 
 	const addTask = () => {
-		if (!projectid || taskName.trim() === "" || taskStatus === "") return;
+		if (!projectName || taskName.trim() === "" || taskStatus === "") return;
 
 		setProjects((currentProjects) =>
 			currentProjects.map((project) => {
-				if (String(project.id) !== String(projectid)) {
+				if (
+					String(project.name.toLowerCase().replaceAll(" ", "-")) !==
+					String(projectName)
+				) {
 					return project;
 				}
 
@@ -61,7 +67,11 @@ const Project = () => {
 			<button onClick={addTask}>Add</button>
 			<ul>
 				{projects
-					.filter((project) => String(project.id) === String(projectid))
+					.filter(
+						(project) =>
+							String(project.name.toLowerCase().replaceAll(" ", "-")) ===
+							String(projectName),
+					)
 					.flatMap((project) =>
 						Array.isArray(project.tasks) ? project.tasks : [],
 					)

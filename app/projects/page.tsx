@@ -31,7 +31,11 @@ const Projects = () => {
 			<ul>
 				{projects.map((project) => (
 					<li key={project.id}>
-						<Link href={`/projects/${project.id}`}>{project.name}</Link>
+						<Link
+							href={`/projects/${project.name.toLowerCase().replaceAll(" ", "-")}`}
+						>
+							{project.name}
+						</Link>
 					</li>
 				))}
 			</ul>
