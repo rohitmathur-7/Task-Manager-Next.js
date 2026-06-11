@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useProjects } from "@/context/ProjectsContext";
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, redirect } from "next/navigation";
 
 const Project = () => {
 	const params = useParams<{ projectname: string | string[] }>();
@@ -11,17 +11,24 @@ const Project = () => {
 		? params.projectname[0]
 		: params.projectname;
 
-	const { projects, addTask } = useProjects();
+	const { projects, addTask, deleteProject } = useProjects();
+
 	const currentProject = projects.find(
 		(project) =>
 			String(project.name.toLowerCase().replaceAll(" ", "-")) ===
 			String(projectName),
 	);
+
 	const projectTitle =
 		currentProject?.name ?? projectName?.replaceAll("-", " ");
 
 	const [taskName, setTaskName] = useState("");
 	const [taskStatus, setTaskStatus] = useState("");
+
+	const handleDeleteProject = () => {
+		deleteProject(currentProject?.id ?? "");
+		redirect("/");
+	};
 
 	return (
 		<div>
@@ -79,6 +86,7 @@ const Project = () => {
 						</li>
 					))}
 			</ul>
+			<button onClick={handleDeleteProject}>Delete Project</button>
 		</div>
 	);
 };
