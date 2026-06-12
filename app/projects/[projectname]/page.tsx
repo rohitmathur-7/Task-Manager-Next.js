@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useProjects } from "@/context/ProjectsContext";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, redirect } from "next/navigation";
 
 const Project = () => {
@@ -11,7 +11,7 @@ const Project = () => {
 		? params.projectname[0]
 		: params.projectname;
 
-	const { projects, addTask, deleteProject } = useProjects();
+	const { projects, addTask, deleteProject, updateProject } = useProjects();
 
 	const currentProject = projects.find(
 		(project) =>
@@ -19,11 +19,21 @@ const Project = () => {
 			String(projectName),
 	);
 
-	const projectTitle =
-		currentProject?.name ?? projectName?.replaceAll("-", " ");
+	const [projectTitle, setProjectTitle] = useState(
+		currentProject?.name ?? projectName?.replaceAll("-", " "),
+	);
 
 	const [taskName, setTaskName] = useState("");
 	const [taskStatus, setTaskStatus] = useState("");
+	const [isEditingProjectName, setIsEditingProjectName] = useState(false);
+
+	const projectNameRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (isEditingProjectName && projectNameRef.current) {
+			projectNameRef.current.focus();
+		}
+	}, [isEditingProjectName]);
 
 	const handleDeleteProject = () => {
 		deleteProject(currentProject?.id ?? "");
@@ -33,7 +43,33 @@ const Project = () => {
 	return (
 		<div>
 			<Link href="/">Home</Link>
-			<h2>{projectTitle ? projectTitle : ""}</h2>
+			<br />
+			{isEditingProjectName ? (
+				<input
+					type="text"
+					value={projectTitle}
+					onChange={(e) => {
+						setProjectTitle(e.target.value);
+					}}
+					onBlur={(e) => {
+						updateProject(currentProject?.id ?? "", e.target.value);
+						setIsEditingProjectName(false);
+						redirect(
+							`/projects/${e.target.value.toLowerCase().replaceAll(" ", "-")}`,
+						);
+					}}
+					ref={projectNameRef}
+				/>
+			) : (
+				<h2
+					onClick={() => {
+						projectNameRef?.current?.focus();
+						setIsEditingProjectName(true);
+					}}
+				>
+					{projectTitle ? projectTitle : ""}
+				</h2>
+			)}
 
 			<br />
 			<button>Add Task</button>

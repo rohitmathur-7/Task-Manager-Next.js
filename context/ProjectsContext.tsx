@@ -25,6 +25,7 @@ type ProjectsContextType = {
 	addProject: (projectName: string) => void;
 	addTask: (projectId: string, task: Omit<Task, "id">) => void;
 	deleteProject: (projectID: string) => void;
+	updateProject: (projectID: string, projectName: string) => void;
 };
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(
@@ -92,6 +93,21 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 		});
 	};
 
+	const updateProject = (projectID: string, projectName: string) => {
+		console.log("Updating project", { projectID, projectName });
+		setProjects((currentProjects) => {
+			return currentProjects.map((project) => {
+				if (project.id === projectID) {
+					return {
+						...project,
+						name: projectName,
+					};
+				}
+				return project;
+			});
+		});
+	};
+
 	return (
 		<ProjectsContext.Provider
 			value={{
@@ -100,6 +116,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 				addProject,
 				addTask,
 				deleteProject,
+				updateProject,
 			}}
 		>
 			{children}
