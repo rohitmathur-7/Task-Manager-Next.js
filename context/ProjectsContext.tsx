@@ -26,6 +26,11 @@ type ProjectsContextType = {
 	addProject: (projectName: string) => void;
 	addTask: (projectId: string, task: Omit<Task, "id">) => void;
 	deleteTask: (projectId: string, taskId: string) => void;
+	updateTask: (
+		projectId: string,
+		taskId: string,
+		task: Omit<Task, "id">,
+	) => void;
 	deleteProject: (projectID: string) => void;
 	updateProject: (projectID: string, projectName: string) => void;
 };
@@ -107,6 +112,29 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 		});
 	};
 
+	const updateTask = (
+		projectId: string,
+		taskId: string,
+		task: Omit<Task, "id">,
+	) => {
+		setProjects((currentProjects) => {
+			return currentProjects.map((project) => {
+				if (project.id === projectId) {
+					if (Array.isArray(project.tasks)) {
+						return {
+							...project,
+							tasks: project.tasks.map((t) =>
+								t.id === taskId ? { ...t, ...task } : t,
+							),
+						};
+					}
+				}
+
+				return project;
+			});
+		});
+	};
+
 	const deleteProject = (projectId: string) => {
 		setProjects((currentProjects) => {
 			return currentProjects.filter((project) => project.id !== projectId);
@@ -135,6 +163,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 				addProject,
 				addTask,
 				deleteTask,
+				updateTask,
 				deleteProject,
 				updateProject,
 			}}
