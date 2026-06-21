@@ -9,6 +9,7 @@ import {
 } from "react";
 
 type Task = {
+	id: string;
 	title: string;
 	status: string;
 };
@@ -24,6 +25,7 @@ type ProjectsContextType = {
 	getProjectById: (projectId: string) => Project | undefined;
 	addProject: (projectName: string) => void;
 	addTask: (projectId: string, task: Omit<Task, "id">) => void;
+	deleteTask: (projectId: string, taskId: string) => void;
 	deleteProject: (projectID: string) => void;
 	updateProject: (projectID: string, projectName: string) => void;
 };
@@ -78,7 +80,25 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 
 					return {
 						...project,
-						tasks: [...currentTasks, { ...task }],
+						tasks: [
+							...currentTasks,
+							{ ...task, id: (currentTasks.length + 1).toString() },
+						],
+					};
+				}
+
+				return project;
+			});
+		});
+	};
+
+	const deleteTask = (projectID: string, taskId: string) => {
+		setProjects((currentProjects) => {
+			return currentProjects.map((project) => {
+				if (project.id === projectID) {
+					return {
+						...project,
+						tasks: project.tasks?.filter((task) => task.id !== taskId),
 					};
 				}
 
@@ -94,7 +114,6 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 	};
 
 	const updateProject = (projectID: string, projectName: string) => {
-		console.log("Updating project", { projectID, projectName });
 		setProjects((currentProjects) => {
 			return currentProjects.map((project) => {
 				if (project.id === projectID) {
@@ -115,6 +134,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 				getProjectById,
 				addProject,
 				addTask,
+				deleteTask,
 				deleteProject,
 				updateProject,
 			}}

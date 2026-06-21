@@ -11,7 +11,8 @@ const Project = () => {
 		? params.projectname[0]
 		: params.projectname;
 
-	const { projects, addTask, deleteProject, updateProject } = useProjects();
+	const { projects, addTask, deleteTask, deleteProject, updateProject } =
+		useProjects();
 
 	const currentProject = projects.find(
 		(project) =>
@@ -19,9 +20,7 @@ const Project = () => {
 			String(projectName),
 	);
 
-	const [projectTitle, setProjectTitle] = useState(
-		currentProject?.name ?? projectName?.replaceAll("-", " "),
-	);
+	const [projectTitle, setProjectTitle] = useState(currentProject?.name);
 
 	const [taskName, setTaskName] = useState("");
 	const [taskStatus, setTaskStatus] = useState("");
@@ -34,6 +33,10 @@ const Project = () => {
 			projectNameRef.current.focus();
 		}
 	}, [isEditingProjectName]);
+
+	useEffect(() => {
+		setProjectTitle(currentProject?.name);
+	}, [projects]);
 
 	const handleDeleteProject = () => {
 		deleteProject(currentProject?.id ?? "");
@@ -82,9 +85,7 @@ const Project = () => {
 			<select
 				value={taskStatus}
 				onChange={(e) => {
-					const index = e.target.selectedIndex;
-					const optionName = e.target.options[index].text;
-					setTaskStatus(optionName);
+					setTaskStatus(e.target.value);
 				}}
 			>
 				<option value="">Select Status</option>
@@ -119,6 +120,11 @@ const Project = () => {
 							>
 								{task.title} - {task.status}
 							</Link>
+							<button
+								onClick={() => deleteTask(currentProject?.id ?? "", task.id)}
+							>
+								Delete Task
+							</button>
 						</li>
 					))}
 			</ul>
