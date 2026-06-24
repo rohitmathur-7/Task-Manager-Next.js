@@ -29,7 +29,25 @@ export default function RootLayout({
 			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
 		>
 			<ProjectsProvider>
-				<body className="min-h-full flex flex-col">{children}</body>
+				<body className="min-h-full max-w-[1280px] m-auto">
+					<header className="flex justify-between">
+						<p>Task Manager</p>
+						<div>
+							<input placeholder="Search..." />
+							<button className="pointer">Settings</button>
+							<button className="pointer">Profile</button>
+						</div>
+					</header>
+					<aside className="flex flex-col items-start my-4">
+						<button>Dashboard</button>
+						<button>Projects</button>
+						<button>Tasks</button>
+					</aside>
+					{children}
+					<footer>
+						<p>This is the footer</p>
+					</footer>
+				</body>
 			</ProjectsProvider>
 		</html>
 	);
