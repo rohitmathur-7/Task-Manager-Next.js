@@ -42,12 +42,14 @@ export default function RootLayout({
 							</div>
 						</div>
 					</header>
-					<aside className="flex flex-col items-start my-4">
-						<Link href="/">Dashboard</Link>
-						<Link href="/projects/">Projects</Link>
-						<Link href="/tasks/">Tasks</Link>
-					</aside>
-					{children}
+					<div className="my-4 flex gap-6">
+						<aside className="flex flex-col items-start">
+							<Link href="/">Dashboard</Link>
+							<Link href="/projects/">Projects</Link>
+							<Link href="/tasks/">Tasks</Link>
+						</aside>
+						<main className="flex-1">{children}</main>
+					</div>
 					<footer>
 						<p>This is the footer</p>
 					</footer>
