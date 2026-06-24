@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProjectsProvider } from "@/context/ProjectsContext";
+import Link from "next/link";
+
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -31,17 +33,19 @@ export default function RootLayout({
 			<ProjectsProvider>
 				<body className="min-h-full max-w-[1280px] m-auto">
 					<header className="flex justify-between">
-						<p>Task Manager</p>
-						<div>
+						<Link href="/">Task Manager</Link>
+						<div className="flex gap-8">
 							<input placeholder="Search..." />
-							<button className="pointer">Settings</button>
-							<button className="pointer">Profile</button>
+							<div className="flex gap-4">
+								<button className="pointer">Settings</button>
+								<button className="pointer">Profile</button>
+							</div>
 						</div>
 					</header>
 					<aside className="flex flex-col items-start my-4">
-						<button>Dashboard</button>
-						<button>Projects</button>
-						<button>Tasks</button>
+						<Link href="/">Dashboard</Link>
+						<Link href="/projects/">Projects</Link>
+						<Link href="/tasks/">Tasks</Link>
 					</aside>
 					{children}
 					<footer>

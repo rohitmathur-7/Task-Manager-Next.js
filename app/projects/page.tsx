@@ -10,7 +10,7 @@ const Projects = () => {
 	const [showAddProjectName, setShowAddProjectName] = useState(false);
 
 	return (
-		<div>
+		<div className="projects-page">
 			<Link href="/">Home</Link>
 			<h1>All Projects</h1>
 			<ul>
