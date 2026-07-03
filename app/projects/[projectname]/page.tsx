@@ -26,6 +26,8 @@ const Project = () => {
 	const [taskStatus, setTaskStatus] = useState("");
 	const [isEditingProjectName, setIsEditingProjectName] = useState(false);
 
+	const [showAddTaskName, setShowAddTaskName] = useState(false);
+
 	const projectNameRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -43,10 +45,12 @@ const Project = () => {
 		redirect("/");
 	};
 
+	const addNewTask = () => {
+		setShowAddTaskName(false)
+	}
+
 	return (
 		<div>
-			<Link href="/">Home</Link>
-			<br />
 			{isEditingProjectName ? (
 				<input
 					type="text"
@@ -70,36 +74,41 @@ const Project = () => {
 						setIsEditingProjectName(true);
 					}}
 				>
-					{projectTitle ? projectTitle : ""}
+					<b>{projectTitle ? projectTitle : ""}</b>
 				</h2>
 			)}
 
 			<br />
-			<button>Add Task</button>
-			<input
-				type="text"
-				placeholder="Task Name"
-				value={taskName}
-				onChange={(e) => setTaskName(e.target.value)}
-			/>
-			<select
-				value={taskStatus}
-				onChange={(e) => {
-					setTaskStatus(e.target.value);
-				}}
-			>
-				<option value="">Select Status</option>
-				<option value="not-started">Not Started</option>
-				<option value="in-progress">In Progress</option>
-				<option value="done">Done</option>
-			</select>
-			<button
-				onClick={() =>
+			{showAddTaskName && 
+			<>
+				<input
+					type="text"
+					placeholder="Task Name"
+					value={taskName}
+					onChange={(e) => setTaskName(e.target.value)}
+				/>
+				<select
+					value={taskStatus}
+					onChange={(e) => {
+						setTaskStatus(e.target.value);
+					}}
+				>
+					<option value="">Select Status</option>
+					<option value="not-started">Not Started</option>
+					<option value="in-progress">In Progress</option>
+					<option value="done">Done</option>
+				</select>
+				<button onClick={()=>{
 					addTask(currentProject?.id ?? "", {
 						title: taskName,
 						status: taskStatus,
 					})
-				}
+				}}>Add</button>
+			</>
+			}
+			<button
+				className="ml-8 cursor-pointer"
+				onClick={addNewTask}
 			>
 				Add
 			</button>
@@ -128,7 +137,7 @@ const Project = () => {
 						</li>
 					))}
 			</ul>
-			<button onClick={handleDeleteProject}>Delete Project</button>
+			<button className="mt-4 text-red-700" onClick={handleDeleteProject}>Delete Project</button>
 		</div>
 	);
 };

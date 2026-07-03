@@ -9,10 +9,15 @@ const Projects = () => {
 	const [newProjectName, setNewProjectName] = useState("");
 	const [showAddProjectName, setShowAddProjectName] = useState(false);
 
+	const addNewProject = (projectName: string) => {
+		addProject(projectName);
+		setNewProjectName("");
+		setShowAddProjectName(false);
+	}
+
 	return (
-		<div className="projects-page">
-			<Link href="/">Home</Link>
-			<h1>All Projects</h1>
+		<div className="projects-page flex flex-col">
+			<h1 className="mb-4"><b>All Projects</b></h1>
 			<ul>
 				{projects.map((project) => (
 					<li key={project.id}>
@@ -25,7 +30,7 @@ const Projects = () => {
 				))}
 			</ul>
 
-			<button onClick={() => setShowAddProjectName(true)}>Add Project</button>
+			<button className="cursor-pointer" onClick={() => setShowAddProjectName(true)}>Add Project</button>
 			{showAddProjectName && (
 				<>
 					<input
@@ -34,7 +39,7 @@ const Projects = () => {
 						value={newProjectName}
 						onChange={(e) => setNewProjectName(e.target.value)}
 					/>
-					<button onClick={() => addProject(newProjectName)}>Add</button>
+					<button onClick={() => addNewProject(newProjectName)} className="w-fit">Add</button>
 				</>
 			)}
 		</div>
