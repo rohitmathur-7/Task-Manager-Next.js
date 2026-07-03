@@ -46,7 +46,17 @@ const Project = () => {
 	};
 
 	const addNewTask = () => {
-		setShowAddTaskName(false)
+		console.log("Adding new task");
+		setShowAddTaskName(true);
+	}
+
+	const addNewTaskk = () => {
+		addTask(currentProject?.id ?? "", {
+			title: taskName,
+			status: taskStatus,
+		})
+
+		setShowAddTaskName(false);
 	}
 
 	return (
@@ -80,39 +90,28 @@ const Project = () => {
 
 			<br />
 			{showAddTaskName && 
-			<>
-				<input
-					type="text"
-					placeholder="Task Name"
-					value={taskName}
-					onChange={(e) => setTaskName(e.target.value)}
-				/>
-				<select
-					value={taskStatus}
-					onChange={(e) => {
-						setTaskStatus(e.target.value);
-					}}
-				>
-					<option value="">Select Status</option>
-					<option value="not-started">Not Started</option>
-					<option value="in-progress">In Progress</option>
-					<option value="done">Done</option>
-				</select>
-				<button onClick={()=>{
-					addTask(currentProject?.id ?? "", {
-						title: taskName,
-						status: taskStatus,
-					})
-				}}>Add</button>
-			</>
+				<>
+					<input
+						type="text"
+						placeholder="Task Name"
+						value={taskName}
+						onChange={(e) => setTaskName(e.target.value)}
+					/>
+					<select
+						value={taskStatus}
+						onChange={(e) => {
+							setTaskStatus(e.target.value);
+						}}
+					>
+						<option value="">Select Status</option>
+						<option value="not-started">Not Started</option>
+						<option value="in-progress">In Progress</option>
+						<option value="done">Done</option>
+					</select>
+					<button className="ml-4 text-green-700 cursor-pointer" onClick={addNewTaskk}>Add Task</button>
+				</>
 			}
-			<button
-				className="ml-8 cursor-pointer"
-				onClick={addNewTask}
-			>
-				Add
-			</button>
-			<ul>
+			<ul className="bg-blue-700 p-4 rounded-lg mt-4">
 				{projects
 					.filter(
 						(project) =>
@@ -130,6 +129,7 @@ const Project = () => {
 								{task.title} - {task.status}
 							</Link>
 							<button
+								className="ml-4 text-red-700"
 								onClick={() => deleteTask(currentProject?.id ?? "", task.id)}
 							>
 								Delete Task
@@ -137,6 +137,12 @@ const Project = () => {
 						</li>
 					))}
 			</ul>
+			<button
+				className="ml-128 cursor-pointer block"
+				onClick={addNewTask}
+			>
+				Add
+			</button>
 			<button className="mt-4 text-red-700" onClick={handleDeleteProject}>Delete Project</button>
 		</div>
 	);
