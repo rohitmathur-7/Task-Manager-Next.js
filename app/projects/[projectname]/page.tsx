@@ -46,7 +46,6 @@ const Project = () => {
 	};
 
 	const addNewTask = () => {
-		console.log("Adding new task");
 		setShowAddTaskName(true);
 	}
 
@@ -56,6 +55,8 @@ const Project = () => {
 			status: taskStatus,
 		})
 
+		setTaskName("");
+		setTaskStatus("");
 		setShowAddTaskName(false);
 	}
 
@@ -108,7 +109,7 @@ const Project = () => {
 						<option value="in-progress">In Progress</option>
 						<option value="done">Done</option>
 					</select>
-					<button className="ml-4 text-green-700 cursor-pointer" onClick={addNewTaskk}>Add Task</button>
+					<button className="ml-8 text-green-700 cursor-pointer" onClick={addNewTaskk}>Add</button>
 				</>
 			}
 			<ul className="bg-blue-700 p-4 rounded-lg mt-4">
@@ -141,7 +142,7 @@ const Project = () => {
 				className="ml-128 cursor-pointer block"
 				onClick={addNewTask}
 			>
-				Add
+				Add New Task
 			</button>
 			<button className="mt-4 text-red-700" onClick={handleDeleteProject}>Delete Project</button>
 		</div>
